@@ -8,6 +8,8 @@ public class Draggable : MonoBehaviour
   public Camera mainCamera;
   Rigidbody2D rb;
 
+  public float speed = 125f;
+
   void Start()
   {
     rb = GetComponent<Rigidbody2D>();
@@ -28,7 +30,7 @@ public class Draggable : MonoBehaviour
 
   void OnMouseDrag()
   {
-    //move the rigidbody2d towards the mouse
-    rb.MovePosition(getMouseWorldPosition() + mousePosOffset);
+    Vector3 direction = (getMouseWorldPosition() + mousePosOffset - transform.position).normalized;
+    rb.velocity = new Vector2(direction.x, direction.y) * speed;
   }
 }
