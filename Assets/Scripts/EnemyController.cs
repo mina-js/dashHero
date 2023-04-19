@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
   void Start()
   {
     //find tagged enemyTarget, could be better but theres only one player at the moment
-    target = GameObject.FindGameObjectWithTag("enemyTarget").transform;
+    target = GameObject.FindGameObjectWithTag("bodyPart").transform;
   }
 
   void Awake()
