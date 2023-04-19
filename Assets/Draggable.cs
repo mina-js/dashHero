@@ -5,14 +5,20 @@ using UnityEngine;
 public class Draggable : MonoBehaviour
 {
   Vector3 mousePosOffset;
-  public Camera mainCamera;
+  Camera mainCamera;
   Rigidbody2D rb;
-
-  public float speed = 125f;
+  float speed;
+  RagdollController ragdollController;
 
   void Start()
   {
     rb = GetComponent<Rigidbody2D>();
+
+    //get the ragdoll controller on parent object, useful for passing props to all the children
+    ragdollController = GetComponentInParent<RagdollController>();
+
+    mainCamera = ragdollController.mainCamera;
+    speed = ragdollController.speed;
   }
 
   private Vector3 getMouseWorldPosition()
@@ -26,6 +32,7 @@ public class Draggable : MonoBehaviour
   {
     //capute mouse offset
     mousePosOffset = gameObject.transform.position - getMouseWorldPosition();
+    speed = ragdollController.speed;
   }
 
   void OnMouseDrag()
