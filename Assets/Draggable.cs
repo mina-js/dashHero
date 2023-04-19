@@ -6,6 +6,12 @@ public class Draggable : MonoBehaviour
 {
   Vector3 mousePosOffset;
   public Camera mainCamera;
+  Rigidbody2D rb;
+
+  void Start()
+  {
+    rb = GetComponent<Rigidbody2D>();
+  }
 
   private Vector3 getMouseWorldPosition()
   {
@@ -22,6 +28,7 @@ public class Draggable : MonoBehaviour
 
   void OnMouseDrag()
   {
-    transform.position = getMouseWorldPosition() + mousePosOffset;
+    //move the rigidbody2d towards the mouse
+    rb.MovePosition(getMouseWorldPosition() + mousePosOffset);
   }
 }
