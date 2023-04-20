@@ -53,6 +53,7 @@ public class Draggable : MonoBehaviour
   void OnMouseUp()
   {
     isLaunched = true;
+    EventManager.EmitEvent("launched", new Dictionary<string, object> { { "bodyPart", gameObject } });
   }
 
   void HandleEvent(string eventKey, object data)
@@ -62,6 +63,10 @@ public class Draggable : MonoBehaviour
     if (eventKey == "bodyPartCollision")
     {
       isLaunched = false; //stops it from trying to align itself once it collides, todo this wont work once enemies arent colliders hmmmm
+    }
+    else if (eventKey == "launched")
+    {
+      isLaunched = true;
     }
   }
 
