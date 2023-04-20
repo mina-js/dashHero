@@ -123,56 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &35277443 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 791776316369976316, guid: 8568639368747443eade35336633aa67, type: 3}
-  m_PrefabInstance: {fileID: 926103548}
-  m_PrefabAsset: {fileID: 0}
---- !u!233 &35277446
-HingeJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 35277443}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 1001157822}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: -0.089895904, y: -0.5807555}
-  m_ConnectedAnchor: {x: 1.0655732, y: 0.3102211}
-  m_UseMotor: 0
-  m_Motor:
-    m_MotorSpeed: 0
-    m_MaximumMotorForce: 10000
-  m_UseLimits: 0
-  m_AngleLimits:
-    m_LowerAngle: 0
-    m_UpperAngle: 359
---- !u!50 &35277447
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 35277443}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &440005588
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,6 +445,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 239927256219810874, guid: 8568639368747443eade35336633aa67, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.140318
+      objectReference: {fileID: 0}
+    - target: {fileID: 239927256219810874, guid: 8568639368747443eade35336633aa67, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3269312
+      objectReference: {fileID: 0}
+    - target: {fileID: 239927256219810874, guid: 8568639368747443eade35336633aa67, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.68
       objectReference: {fileID: 0}
@@ -558,17 +516,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1394200151508216682, guid: 8568639368747443eade35336633aa67, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1394200151508216682, guid: 8568639368747443eade35336633aa67, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 166f93b1a52394bd8bc17dc38c30e211, type: 3}
     - target: {fileID: 6052153042515914344, guid: 8568639368747443eade35336633aa67, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 768730975}
+    - target: {fileID: 9199160600966018401, guid: 8568639368747443eade35336633aa67, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 1.2046621
+      objectReference: {fileID: 0}
+    - target: {fileID: 9199160600966018401, guid: 8568639368747443eade35336633aa67, type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 1.080561
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8568639368747443eade35336633aa67, type: 3}
---- !u!50 &1001157822 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 985953157614951713, guid: 8568639368747443eade35336633aa67, type: 3}
-  m_PrefabInstance: {fileID: 926103548}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1759244437
 PrefabInstance:
   m_ObjectHideFlags: 0
