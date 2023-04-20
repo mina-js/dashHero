@@ -10,21 +10,29 @@ public class Draggable : MonoBehaviour
   float speed;
   RagdollController ragdollController;
 
+  public bool isAnchor;
+  bool isLaunched;
+
   void Start()
   {
     rb = GetComponent<Rigidbody2D>();
 
     //get the ragdoll controller on parent object, useful for passing props to all the children
     ragdollController = GetComponentInParent<RagdollController>();
-
-    mainCamera = ragdollController.mainCamera;
+    mainCamera = Camera.main;
     speed = ragdollController.speed;
+
+    isLaunched = false;
+    EventManager.OnEventEmitted += HandleEvent;
   }
 
-  private Vector3 getMouseWorldPosition()
+  void Update()
   {
-    //capture mouse position and return world point
-    return mainCamera.ScreenToWorldPoint(Input.mousePosition);
+    //rotate the rb to face the velocity direction
+    if (isLaunched && isAnchor)
+    {
+      OrientInDirectionOfMovement();
+    }
   }
 
   //called first frame that youre clicking on it
@@ -33,11 +41,46 @@ public class Draggable : MonoBehaviour
     //capute mouse offset
     mousePosOffset = gameObject.transform.position - getMouseWorldPosition();
     speed = ragdollController.speed;
+    isLaunched = false;
   }
 
   void OnMouseDrag()
   {
-    Vector3 direction = (getMouseWorldPosition() + mousePosOffset - transform.position).normalized;
+    Vector3 direction = (getMouseWorldPosition() + mousePosOffset - transform.position);
     rb.velocity = new Vector2(direction.x, direction.y) * speed;
+  }
+
+  void OnMouseUp()
+  {
+    isLaunched = true;
+    EventManager.EmitEvent("launched", new Dictionary<string, object> { { "bodyPart", gameObject } });
+  }
+
+  void HandleEvent(string eventKey, object data)
+  {
+    Dictionary<string, object> dataDict = data as Dictionary<string, object>;
+
+    if (eventKey == "bodyPartCollision")
+    {
+      isLaunched = false; //stops it from trying to align itself once it collides, todo this wont work once enemies arent colliders hmmmm
+    }
+    else if (eventKey == "launched")
+    {
+      isLaunched = true;
+    }
+  }
+
+  private void OrientInDirectionOfMovement()
+  {
+    // Calculate the angle between the current up direction and the velocity direction
+    float angle = Vector2.SignedAngle(rb.velocity, transform.up);
+    // Rotate the Rigidbody2D around the z-axis to face the velocity direction
+    rb.MoveRotation(rb.rotation - angle);
+  }
+
+  private Vector3 getMouseWorldPosition()
+  {
+    //capture mouse position and return world point
+    return mainCamera.ScreenToWorldPoint(Input.mousePosition);
   }
 }
