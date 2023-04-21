@@ -2,19 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Currently just using this to pass variables to all the body part children
 public class RagdollController : MonoBehaviour
 {
-  public float speed = 50f;
-  public Camera mainCamera;
-
   SpriteRenderer launchedArmSpriteRenderer;
   SpriteRenderer leftArmSpriteRenderer;
-
-  // void Start()
-  // {
-  //   EventManager.OnEventEmitted += HandleEvent;
-  // }
 
   void Start()
   {
@@ -31,12 +22,7 @@ public class RagdollController : MonoBehaviour
   {
     Dictionary<string, object> dataDict = data as Dictionary<string, object>;
 
-    if (dataDict == null)
-    {
-      Debug.Log("data is not a dictionary");
-      return;
-    }
-    else if (eventKey == "launched")
+    if (eventKey == "launched")
     {
       launchedArmSpriteRenderer.enabled = true;
       leftArmSpriteRenderer.enabled = false;
