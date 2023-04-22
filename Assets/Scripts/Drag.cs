@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 //None is after a collision or at the beginning
 //launching starts whens its first click and ends after swipeMs milliseconds
@@ -14,7 +15,7 @@ public enum SwipeState
 
 public class Drag : MonoBehaviour
 {
-  Vector3 mousePosOffset;
+  Vector3 touchPosOffset;
   [SerializeField] Camera mainCamera;
   Rigidbody2D rb;
   [SerializeField] float speed; //TODO: use this for the speed when its been launched
@@ -23,8 +24,32 @@ public class Drag : MonoBehaviour
   float swipeTimer = 0f;
   public float swipeMS = 100f; //how long you have to swipe for (to prevent crashing lol)
   public float effectsCutoff = 0.1f; //how fast you have to be moving to run effects
+  [SerializeField] private InputAction press, screenPos;
+  Vector3 currentScreenPos;
+  bool isDragging;
+  bool isPressedOn
+  {
+    get
+    {
+      Collider2D hit = Physics2D.OverlapPoint(WorldPos);
 
-  void Start()
+      if (hit == null) return false;
+
+      return hit.transform == transform;
+    }
+  }
+
+  Vector3 WorldPos
+  {
+    get
+    {
+      float z = mainCamera.WorldToScreenPoint(transform.position).z;
+      return mainCamera.ScreenToWorldPoint(currentScreenPos + new Vector3(0, 0, z));
+    }
+  }
+
+
+  void Awake()
   {
     swipeState = SwipeState.None;
     swipeTimer = 0f;
@@ -32,6 +57,64 @@ public class Drag : MonoBehaviour
     rb = GetComponent<Rigidbody2D>();
 
     EventManager.OnEventEmitted += HandleEvent;
+
+    screenPos.Enable();
+    press.Enable();
+
+    screenPos.performed += context => currentScreenPos = context.ReadValue<Vector2>();
+
+    press.performed += _ => { if (isPressedOn) StartCoroutine(OnTouch()); };
+    press.canceled += _ => { isDragging = false; };
+  }
+
+
+  IEnumerator OnTouch()
+  {
+
+    OnGrab();
+    while (isDragging)
+    {
+      OnDrag();
+      yield return null;
+    }
+    OnDrop();
+  }
+
+  void OnGrab()
+  {
+    Debug.Log("GRAB");
+    isDragging = true;
+    touchPosOffset = transform.position - WorldPos;
+
+    rb.position = WorldPos;
+    rb.velocity = Vector2.zero;
+
+    // Debug.Log("Starting launch!");
+    swipeState = SwipeState.Launching;
+  }
+
+  void OnDrag()
+  {
+    Debug.Log("DRAG");
+    swipeTimer += Time.deltaTime * 1000f;
+    // Debug.Log("swipeTimer: " + swipeTimer + " swipeMS: " + swipeMS);
+
+    if (swipeTimer >= swipeMS) //if been launching for too long, launch it
+    {
+      if (swipeState == SwipeState.Launching) Launch();
+      return;
+    }
+    else
+    {
+      TrackSwipe();
+
+    }
+  }
+
+  void OnDrop()
+  {
+    Debug.Log("DROP");
+    if (swipeState != SwipeState.Launched) Launch();
   }
 
   void Update()
@@ -75,45 +158,6 @@ public class Drag : MonoBehaviour
     }
   }
 
-  //MOUSE DOWN STUFF -- theres probably a better way lol
-
-  //called first frame that youre clicking on it
-  public void OnMouseDown()
-  {
-    mousePosOffset = gameObject.transform.position - getMouseWorldPosition(); // capute mouse offset
-
-    //make it snap to mouse position
-    rb.position = getMouseWorldPosition();
-    rb.velocity = Vector2.zero;
-
-    // Debug.Log("Starting launch!");
-    swipeState = SwipeState.Launching;
-  }
-
-  //stops registering after swipMS milliseconds
-  public void OnMouseDrag()
-  {
-
-    swipeTimer += Time.deltaTime * 1000f;
-    // Debug.Log("swipeTimer: " + swipeTimer + " swipeMS: " + swipeMS);
-
-    if (swipeTimer >= swipeMS) //if been launching for too long, launch it
-    {
-      if (swipeState == SwipeState.Launching) Launch();
-      return;
-    }
-    else
-    {
-      TrackSwipe();
-
-    }
-  }
-
-  public void OnMouseUp()
-  {
-    if (swipeState != SwipeState.Launched) Launch();
-  }
-
   void Launch()
   {
     Debug.Log("LAUNCH");
@@ -131,17 +175,11 @@ public class Drag : MonoBehaviour
 
   void TrackSwipe()
   {
-    Vector3 direction = (getMouseWorldPosition() + mousePosOffset - transform.position);
+    Vector3 direction = (WorldPos + touchPosOffset - transform.position);
 
     // Debug.Log("tracking velocity (mouse drag) " + direction + " " + direction.x + " " + direction.y + " speed " + speed);
     rb.velocity = new Vector2(direction.x, direction.y) * trackingSpeed;
     // Debug.Log("velocity mag: " + rb.velocity.magnitude);
-  }
-
-  private Vector3 getMouseWorldPosition()
-  {
-    //capture mouse position and return world point
-    return mainCamera.ScreenToWorldPoint(Input.mousePosition);
   }
 
   void resetLaunch()
