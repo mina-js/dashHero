@@ -14,7 +14,7 @@ public class BorderController : MonoBehaviour
 
   void OnCollisionEnter2D(Collision2D collision)
   {
-    if (collision.gameObject.CompareTag("bodyPart"))
+    if (delay > 0f && collision.gameObject.CompareTag("bodyPart"))
     {
       spriteRenderer.enabled = false;
       StartCoroutine(ReenableSpriteRenderer());

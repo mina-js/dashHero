@@ -9,11 +9,11 @@ public class RagdollController : MonoBehaviour
 
   void Start()
   {
-    GameObject launchedArm = transform.Find("launchedArm").gameObject;
-    launchedArmSpriteRenderer = launchedArm.GetComponent<SpriteRenderer>();
+    GameObject launchedArm = transform.Find("launchedArm")?.gameObject;
+    launchedArmSpriteRenderer = launchedArm?.GetComponent<SpriteRenderer>();
 
-    GameObject leftArm = transform.Find("leftUpperArm").gameObject;
-    leftArmSpriteRenderer = leftArm.GetComponent<SpriteRenderer>();
+    GameObject leftArm = transform.Find("leftUpperArm")?.gameObject;
+    leftArmSpriteRenderer = leftArm?.GetComponent<SpriteRenderer>();
 
     EventManager.OnEventEmitted += HandleEvent;
   }
@@ -22,12 +22,12 @@ public class RagdollController : MonoBehaviour
   {
     Dictionary<string, object> dataDict = data as Dictionary<string, object>;
 
-    if (eventKey == "launched")
+    if (eventKey == "launched" && launchedArmSpriteRenderer != null && leftArmSpriteRenderer != null)
     {
       launchedArmSpriteRenderer.enabled = true;
       leftArmSpriteRenderer.enabled = false;
     }
-    else if (eventKey == "bodyPartCollision")
+    else if (eventKey == "bodyPartCollision" && launchedArmSpriteRenderer != null && leftArmSpriteRenderer != null)
     {
       launchedArmSpriteRenderer.enabled = false;
       leftArmSpriteRenderer.enabled = true;
