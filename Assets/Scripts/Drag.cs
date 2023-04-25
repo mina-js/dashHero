@@ -97,11 +97,14 @@ public class Drag : MonoBehaviour
 
   void OnDrag()
   {
+
+    //TODO: theres an issue here if you click to the left of it?
+
     //Point the arrow in direction of launchvector with scaling
     launchVector = (WorldPos - startScreenPos);
     movementArrow.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, launchVector));
     movementArrow.transform.localScale = new Vector3(1, launchVector.magnitude * 0.1f, 1);
-    movementArrow.transform.position = transform.position;
+    //movementArrow.transform.position = transform.position;
   }
 
   void OnDrop()
