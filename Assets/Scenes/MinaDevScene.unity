@@ -178,7 +178,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7732660888480713504, guid: 570ba0fc7687e45969fec4a64549df72, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7732660888480713504, guid: 570ba0fc7687e45969fec4a64549df72, type: 3}
       propertyPath: m_LocalPosition.x
@@ -235,7 +235,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7732660888480713504, guid: 570ba0fc7687e45969fec4a64549df72, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7732660888480713504, guid: 570ba0fc7687e45969fec4a64549df72, type: 3}
       propertyPath: m_LocalPosition.x
@@ -785,7 +785,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4669031907138765024, guid: 2781101372e824aafa7691fc75092e73, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4669031907138765024, guid: 2781101372e824aafa7691fc75092e73, type: 3}
       propertyPath: m_LocalPosition.x
@@ -941,7 +941,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7732660888480713504, guid: 570ba0fc7687e45969fec4a64549df72, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7732660888480713504, guid: 570ba0fc7687e45969fec4a64549df72, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1013,6 +1013,22 @@ PrefabInstance:
       propertyPath: m_MinVertexDistance
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3866014550385283552, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3866014550764241367, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3866014551257411676, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3866014551390938915, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3866014551390938920, guid: 582d4821a75d542339634e14cbfae462, type: 3}
       propertyPath: mainCamera
       value: 
@@ -1021,13 +1037,25 @@ PrefabInstance:
       propertyPath: inverseControls
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3866014551480206024, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3866014551621319254, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3866014551905164862, guid: 582d4821a75d542339634e14cbfae462, type: 3}
       propertyPath: m_Name
       value: NewPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 3866014551905164862, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3866014551905164863, guid: 582d4821a75d542339634e14cbfae462, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3866014551905164863, guid: 582d4821a75d542339634e14cbfae462, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1070,6 +1098,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4020875506739257887, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4020875506739257887, guid: 582d4821a75d542339634e14cbfae462, type: 3}
       propertyPath: m_TagString
       value: bodyPart
       objectReference: {fileID: 0}
@@ -1084,6 +1116,10 @@ PrefabInstance:
     - target: {fileID: 6487640771351388420, guid: 582d4821a75d542339634e14cbfae462, type: 3}
       propertyPath: m_UseLimits
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8324444173282870777, guid: 582d4821a75d542339634e14cbfae462, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8324444173282870777, guid: 582d4821a75d542339634e14cbfae462, type: 3}
       propertyPath: m_TagString
