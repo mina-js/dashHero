@@ -25,6 +25,7 @@ public class Drag : MonoBehaviour
   Vector3 startScreenPos;
   Vector2 launchVector;
   [SerializeField] GameObject movementArrow;
+  [SerializeField] bool inverseControls = true;
   bool isDragging;
   bool isPressedOn
   {
@@ -101,7 +102,7 @@ public class Drag : MonoBehaviour
     //TODO: theres an issue here if you click to the left of it?
 
     //Point the arrow in direction of launchvector with scaling
-    launchVector = (WorldPos - startScreenPos);
+    launchVector = Mathf.Sign(inverseControls ? -1f : 1f) * (WorldPos - startScreenPos);
     movementArrow.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, launchVector));
     movementArrow.transform.localScale = new Vector3(1, launchVector.magnitude * 0.1f, 1);
     //movementArrow.transform.position = transform.position;
@@ -109,7 +110,7 @@ public class Drag : MonoBehaviour
 
   void OnDrop()
   {
-    Debug.Log("DROP");
+    // Debug.Log("DROP");
     if (swipeState != SwipeState.Launched) Launch();
   }
 
@@ -122,13 +123,31 @@ public class Drag : MonoBehaviour
 
   void HandleLaunchEffects()
   {
-
+    DetectEnemyStrike();
     //if velocity magnitude is below launching threshold dont run effects
     if (rb.velocity.magnitude < 0.1f) return;
 
     //todo: do other effects that might happened while launching (before hitting an obstacle that turns it off)
 
     OrientInDirectionOfMovement();
+  }
+
+  void DetectEnemyStrike()
+  {
+    RaycastHit2D hit = Physics2D.Raycast(transform.position, rb.velocity, Mathf.Infinity, LayerMask.GetMask("enemyLayer"));
+
+
+    if (hit.collider == null) return;
+
+    Debug.Log("hit data! " + hit.collider?.gameObject?.name + " at dist " + hit.distance);
+
+    float timeToHit = hit.distance / rb.velocity.magnitude;
+    Debug.Log("time to hit " + timeToHit);
+    if (timeToHit < 0.06)
+    {
+      EventManager.EmitEvent("enemyHit", null);
+      hit.collider?.gameObject.GetComponent<EnemyController>()?.kill();
+    }
   }
 
   private void OrientInDirectionOfMovement()
@@ -148,7 +167,8 @@ public class Drag : MonoBehaviour
 
     if (eventKey == "bodyPartCollision")
     {
-      Debug.Log("COLLIDED RESETTING");
+      // Debug.Log("COLLIDED RESETTING");
+      if (dataDict["other"].ToString().ToLower().Contains("bullet")) return;
       resetLaunch();
       //TODO: have some types of collisions that dont stop launch process
     }
@@ -156,7 +176,7 @@ public class Drag : MonoBehaviour
 
   void Launch()
   {
-    Debug.Log("LAUNCH");
+    // Debug.Log("LAUNCH");
     //TODO play launch animation
 
     swipeState = SwipeState.Launched;
