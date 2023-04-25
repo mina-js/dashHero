@@ -15,17 +15,16 @@ public enum SwipeState
 
 public class Drag : MonoBehaviour
 {
-  Vector3 touchPosOffset;
   [SerializeField] Camera mainCamera;
   Rigidbody2D rb;
   [SerializeField] float speed; //TODO: use this for the speed when its been launched
-  [SerializeField] float trackingSpeed;
   SwipeState swipeState;
-  float swipeTimer = 0f;
-  public float swipeMS = 100f; //how long you have to swipe for (to prevent crashing lol)
   public float effectsCutoff = 0.1f; //how fast you have to be moving to run effects
   [SerializeField] private InputAction press, screenPos;
   Vector3 currentScreenPos;
+  Vector3 startScreenPos;
+  Vector2 launchVector;
+  [SerializeField] GameObject movementArrow;
   bool isDragging;
   bool isPressedOn
   {
@@ -52,7 +51,8 @@ public class Drag : MonoBehaviour
   void Awake()
   {
     swipeState = SwipeState.None;
-    swipeTimer = 0f;
+
+    // swipeTimer = 0f;
 
     rb = GetComponent<Rigidbody2D>();
 
@@ -63,7 +63,7 @@ public class Drag : MonoBehaviour
 
     screenPos.performed += context => currentScreenPos = context.ReadValue<Vector2>();
 
-    press.performed += _ => { if (isPressedOn) StartCoroutine(OnTouch()); };
+    press.performed += _ => { StartCoroutine(OnTouch()); };
     press.canceled += _ => { isDragging = false; };
   }
 
@@ -82,33 +82,26 @@ public class Drag : MonoBehaviour
 
   void OnGrab()
   {
-    Debug.Log("GRAB");
     isDragging = true;
-    touchPosOffset = transform.position - WorldPos;
 
-    rb.position = WorldPos;
+    startScreenPos = WorldPos;
+
+    //freeze the rigidbody
+    rb.constraints = RigidbodyConstraints2D.FreezeAll;
     rb.velocity = Vector2.zero;
 
-    // Debug.Log("Starting launch!");
     swipeState = SwipeState.Launching;
+
+    movementArrow.transform.position = transform.position;
   }
 
   void OnDrag()
   {
-    Debug.Log("DRAG");
-    swipeTimer += Time.deltaTime * 1000f;
-    // Debug.Log("swipeTimer: " + swipeTimer + " swipeMS: " + swipeMS);
-
-    if (swipeTimer >= swipeMS) //if been launching for too long, launch it
-    {
-      if (swipeState == SwipeState.Launching) Launch();
-      return;
-    }
-    else
-    {
-      TrackSwipe();
-
-    }
+    //Point the arrow in direction of launchvector with scaling
+    launchVector = (WorldPos - startScreenPos);
+    movementArrow.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, launchVector));
+    movementArrow.transform.localScale = new Vector3(1, launchVector.magnitude * 0.1f, 1);
+    movementArrow.transform.position = transform.position;
   }
 
   void OnDrop()
@@ -163,29 +156,24 @@ public class Drag : MonoBehaviour
     Debug.Log("LAUNCH");
     //TODO play launch animation
 
-    swipeTimer = 0f;
     swipeState = SwipeState.Launched;
 
     EventManager.EmitEvent("launched", null);
 
-    //add a one time acceleration to rigidbody
-    rb.AddForce(rb.velocity.normalized * speed, ForceMode2D.Impulse);
+    //add the launch vector to the rigidbody
+    rb.AddForce(launchVector * speed, ForceMode2D.Impulse);
 
-  }
+    //remove constraints on movement
+    rb.constraints = RigidbodyConstraints2D.None;
 
-  void TrackSwipe()
-  {
-    Vector3 direction = (WorldPos + touchPosOffset - transform.position);
-
-    // Debug.Log("tracking velocity (mouse drag) " + direction + " " + direction.x + " " + direction.y + " speed " + speed);
-    rb.velocity = new Vector2(direction.x, direction.y) * trackingSpeed;
-    // Debug.Log("velocity mag: " + rb.velocity.magnitude);
+    //reset arrow trnsform
+    movementArrow.transform.localScale = Vector3.zero;
+    movementArrow.transform.position = transform.position;
   }
 
   void resetLaunch()
   {
     swipeState = SwipeState.None;
-    swipeTimer = 0f;
   }
 
 }
