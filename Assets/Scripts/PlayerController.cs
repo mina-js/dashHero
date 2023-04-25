@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     if (eventKey == "playerHit")
     {
       currentHealth--;
-      Debug.Log("Player health: " + currentHealth);
+      //Debug.Log("Player health: " + currentHealth);
     }
   }
 }

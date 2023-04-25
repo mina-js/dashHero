@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 //None is after a collision or at the beginning
 //launching starts whens its first click and ends after swipeMs milliseconds
@@ -14,24 +15,103 @@ public enum SwipeState
 
 public class Drag : MonoBehaviour
 {
-  Vector3 mousePosOffset;
   [SerializeField] Camera mainCamera;
   Rigidbody2D rb;
   [SerializeField] float speed; //TODO: use this for the speed when its been launched
-  [SerializeField] float trackingSpeed;
   SwipeState swipeState;
-  float swipeTimer = 0f;
-  public float swipeMS = 100f; //how long you have to swipe for (to prevent crashing lol)
   public float effectsCutoff = 0.1f; //how fast you have to be moving to run effects
+  [SerializeField] private InputAction press, screenPos;
+  Vector3 currentScreenPos;
+  Vector3 startScreenPos;
+  Vector2 launchVector;
+  [SerializeField] GameObject movementArrow;
+  [SerializeField] bool inverseControls = true;
+  bool isDragging;
+  bool isPressedOn
+  {
+    get
+    {
+      Collider2D hit = Physics2D.OverlapPoint(WorldPos);
 
-  void Start()
+      if (hit == null) return false;
+
+      return hit.transform == transform;
+    }
+  }
+
+  Vector3 WorldPos
+  {
+    get
+    {
+      float z = mainCamera.WorldToScreenPoint(transform.position).z;
+      return mainCamera.ScreenToWorldPoint(currentScreenPos + new Vector3(0, 0, z));
+    }
+  }
+
+
+  void Awake()
   {
     swipeState = SwipeState.None;
-    swipeTimer = 0f;
+
+    // swipeTimer = 0f;
 
     rb = GetComponent<Rigidbody2D>();
 
     EventManager.OnEventEmitted += HandleEvent;
+
+    screenPos.Enable();
+    press.Enable();
+
+    screenPos.performed += context => currentScreenPos = context.ReadValue<Vector2>();
+
+    press.performed += _ => { StartCoroutine(OnTouch()); };
+    press.canceled += _ => { isDragging = false; };
+  }
+
+
+  IEnumerator OnTouch()
+  {
+
+    OnGrab();
+    while (isDragging)
+    {
+      OnDrag();
+      yield return null;
+    }
+    OnDrop();
+  }
+
+  void OnGrab()
+  {
+    isDragging = true;
+
+    startScreenPos = WorldPos;
+
+    //freeze the rigidbody
+    rb.constraints = RigidbodyConstraints2D.FreezeAll;
+    rb.velocity = Vector2.zero;
+
+    swipeState = SwipeState.Launching;
+
+    movementArrow.transform.position = transform.position;
+  }
+
+  void OnDrag()
+  {
+
+    //TODO: theres an issue here if you click to the left of it?
+
+    //Point the arrow in direction of launchvector with scaling
+    launchVector = Mathf.Sign(inverseControls ? -1f : 1f) * (WorldPos - startScreenPos);
+    movementArrow.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, launchVector));
+    movementArrow.transform.localScale = new Vector3(1, launchVector.magnitude * 0.1f, 1);
+    //movementArrow.transform.position = transform.position;
+  }
+
+  void OnDrop()
+  {
+    // Debug.Log("DROP");
+    if (swipeState != SwipeState.Launched) Launch();
   }
 
   void Update()
@@ -43,13 +123,31 @@ public class Drag : MonoBehaviour
 
   void HandleLaunchEffects()
   {
-
+    DetectEnemyStrike();
     //if velocity magnitude is below launching threshold dont run effects
     if (rb.velocity.magnitude < 0.1f) return;
 
     //todo: do other effects that might happened while launching (before hitting an obstacle that turns it off)
 
     OrientInDirectionOfMovement();
+  }
+
+  void DetectEnemyStrike()
+  {
+    RaycastHit2D hit = Physics2D.Raycast(transform.position, rb.velocity, Mathf.Infinity, LayerMask.GetMask("enemyLayer"));
+
+
+    if (hit.collider == null) return;
+
+    Debug.Log("hit data! " + hit.collider?.gameObject?.name + " at dist " + hit.distance);
+
+    float timeToHit = hit.distance / rb.velocity.magnitude;
+    Debug.Log("time to hit " + timeToHit);
+    if (timeToHit < 0.06)
+    {
+      EventManager.EmitEvent("enemyHit", null);
+      hit.collider?.gameObject.GetComponent<EnemyController>()?.kill();
+    }
   }
 
   private void OrientInDirectionOfMovement()
@@ -69,85 +167,36 @@ public class Drag : MonoBehaviour
 
     if (eventKey == "bodyPartCollision")
     {
-      Debug.Log("COLLIDED RESETTING");
+      // Debug.Log("COLLIDED RESETTING");
+      if (dataDict["other"].ToString().ToLower().Contains("bullet")) return;
       resetLaunch();
       //TODO: have some types of collisions that dont stop launch process
     }
   }
 
-  //MOUSE DOWN STUFF -- theres probably a better way lol
-
-  //called first frame that youre clicking on it
-  public void OnMouseDown()
-  {
-    mousePosOffset = gameObject.transform.position - getMouseWorldPosition(); // capute mouse offset
-
-    //make it snap to mouse position
-    rb.position = getMouseWorldPosition();
-    rb.velocity = Vector2.zero;
-
-    // Debug.Log("Starting launch!");
-    swipeState = SwipeState.Launching;
-  }
-
-  //stops registering after swipMS milliseconds
-  public void OnMouseDrag()
-  {
-
-    swipeTimer += Time.deltaTime * 1000f;
-    // Debug.Log("swipeTimer: " + swipeTimer + " swipeMS: " + swipeMS);
-
-    if (swipeTimer >= swipeMS) //if been launching for too long, launch it
-    {
-      if (swipeState == SwipeState.Launching) Launch();
-      return;
-    }
-    else
-    {
-      TrackSwipe();
-
-    }
-  }
-
-  public void OnMouseUp()
-  {
-    if (swipeState != SwipeState.Launched) Launch();
-  }
-
   void Launch()
   {
-    Debug.Log("LAUNCH");
+    // Debug.Log("LAUNCH");
     //TODO play launch animation
 
-    swipeTimer = 0f;
     swipeState = SwipeState.Launched;
 
     EventManager.EmitEvent("launched", null);
 
-    //add a one time acceleration to rigidbody
-    rb.AddForce(rb.velocity.normalized * speed, ForceMode2D.Impulse);
+    //add the launch vector to the rigidbody
+    rb.AddForce(launchVector * speed, ForceMode2D.Impulse);
 
-  }
+    //remove constraints on movement
+    rb.constraints = RigidbodyConstraints2D.None;
 
-  void TrackSwipe()
-  {
-    Vector3 direction = (getMouseWorldPosition() + mousePosOffset - transform.position);
-
-    // Debug.Log("tracking velocity (mouse drag) " + direction + " " + direction.x + " " + direction.y + " speed " + speed);
-    rb.velocity = new Vector2(direction.x, direction.y) * trackingSpeed;
-    // Debug.Log("velocity mag: " + rb.velocity.magnitude);
-  }
-
-  private Vector3 getMouseWorldPosition()
-  {
-    //capture mouse position and return world point
-    return mainCamera.ScreenToWorldPoint(Input.mousePosition);
+    //reset arrow trnsform
+    movementArrow.transform.localScale = Vector3.zero;
+    movementArrow.transform.position = transform.position;
   }
 
   void resetLaunch()
   {
     swipeState = SwipeState.None;
-    swipeTimer = 0f;
   }
 
 }

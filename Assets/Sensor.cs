@@ -13,17 +13,17 @@ public class Sensor : MonoBehaviour
 
   void OnMouseDown()
   {
-    dragController.OnMouseDown();
+    //dragController.OnMouseDown();
   }
 
   //stops registering after swipMS milliseconds
   void OnMouseDrag()
   {
-    dragController.OnMouseDrag();
+    //dragController.OnMouseDrag();
   }
 
   void OnMouseUp()
   {
-    dragController.OnMouseUp();
+    //dragController.OnMouseUp();
   }
 }

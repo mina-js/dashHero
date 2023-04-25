@@ -32,6 +32,8 @@ public class EnemyController : MonoBehaviour
 
   void launchBullet()
   {
+    if (frequencyOfFire == 0) return;
+
     Vector3 bulletDir = (target.transform.position - transform.position).normalized;
     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
@@ -71,5 +73,21 @@ public class EnemyController : MonoBehaviour
   {
     bulletToRemove.SetActive(false);
     // Destroy(bulletToRemove);
+  }
+
+  //called from any other object that wants to kill this enemy
+  public void kill()
+  {
+    Debug.Log("DEADDDDDDd");
+    //freeze rb
+    rb.constraints = RigidbodyConstraints2D.FreezeAll;
+    frequencyOfFire = 0f;
+    //wait 0.5 seconds then destroy
+    Invoke("destroySelf", 0.5f);
+  }
+
+  void destroySelf()
+  {
+    Destroy(gameObject);
   }
 }

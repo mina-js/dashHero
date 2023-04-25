@@ -7,6 +7,8 @@ public class RagdollController : MonoBehaviour
   SpriteRenderer launchedArmSpriteRenderer;
   SpriteRenderer leftArmSpriteRenderer;
 
+  bool isSlashing = false;
+
   void Start()
   {
     GameObject launchedArm = transform.Find("launchedArm")?.gameObject;
@@ -16,6 +18,8 @@ public class RagdollController : MonoBehaviour
     leftArmSpriteRenderer = leftArm?.GetComponent<SpriteRenderer>();
 
     EventManager.OnEventEmitted += HandleEvent;
+
+    isSlashing = false;
   }
 
   void HandleEvent(string eventKey, object data)
@@ -31,6 +35,35 @@ public class RagdollController : MonoBehaviour
     {
       launchedArmSpriteRenderer.enabled = false;
       leftArmSpriteRenderer.enabled = true;
+
     }
+    else if (eventKey == "enemyHit")
+    {
+      if (!isSlashing) FlashTrailRenderer();
+
+    }
+  }
+
+  void FlashTrailRenderer()
+  {
+    //get the launchedarm
+    GameObject launchedArm = transform.Find("launchedArm")?.gameObject;
+    TrailRenderer trailRenderer = launchedArm?.GetComponent<TrailRenderer>();
+    isSlashing = true;
+    //make the trail renderer visible for 1 seconds
+    trailRenderer.enabled = true;
+    trailRenderer.emitting = true;
+
+    StartCoroutine(DisableTrailRenderer(trailRenderer));
+  }
+
+  IEnumerator DisableTrailRenderer(TrailRenderer trailRenderer)
+  {
+    yield return new WaitForSeconds(0.25f); //give it 0.25s of tracking for slash
+    trailRenderer.emitting = false; //stop emitting, but keep visible for 1s
+    yield return new WaitForSeconds(1f);
+    trailRenderer.Clear();//reset it all
+    trailRenderer.enabled = false;
+    isSlashing = false;
   }
 }
