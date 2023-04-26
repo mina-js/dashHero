@@ -21,9 +21,9 @@ public class GameController : MonoBehaviour
 
   }
 
-  public void slowTime()
+  public void slowTime(float factor)
   {
-    timeDilationFactor = 0.25f;
+    timeDilationFactor = 0.25f * factor;
   }
 
   public void resetTimeDilation()

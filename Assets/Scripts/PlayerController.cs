@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
   public float currentHealth;
   public int defenseScore = 1;
   public float bounciness = 0.5f;
+  public float timeDilationFactor = 1f;
 
   private GameObject canvas;
 

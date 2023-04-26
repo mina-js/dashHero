@@ -109,7 +109,7 @@ public class Drag : MonoBehaviour
     timeGrabbed = 0f;
     UpdateUIGrabTimer();
 
-    gameController.slowTime();
+    gameController.slowTime(playerController.timeDilationFactor);
 
     isDragging = true;
 
