@@ -134,7 +134,7 @@ public class Drag : MonoBehaviour
     //Point the arrow in direction of launchvector with scaling
     launchVector = Mathf.Sign(playerController.inverseControls ? -1f : 1f) * (WorldPos - startScreenPos);
     movementArrow.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, launchVector));
-    movementArrow.transform.localScale = new Vector3(1, launchVector.magnitude * 0.1f, 1);
+    movementArrow.transform.localScale = new Vector3(1, launchVector.magnitude * 0.01f, 1);
 
     if (timeGrabbed > playerController.timeToLaunch) Launch();
 

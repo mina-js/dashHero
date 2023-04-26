@@ -42,7 +42,6 @@ public class BulletController : MonoBehaviour
 
   void HandleContactWithWall()
   {
-    Debug.Log("HIT WALL!!!!");
     onDestroy?.Invoke(gameObject);
   }
 

@@ -12,12 +12,11 @@ TagManager:
   - TransparentFX
   - Ignore Raycast
   - enemyLayer
-  - Player
   - Water
   - UI
+  - UI
   - playerLayer
-  - 
-  - 
+  - cameraWall
   - 
   - 
   - 
