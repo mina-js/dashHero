@@ -9,19 +9,22 @@ public class BulletController : MonoBehaviour
 
   public float _rotation;
 
+  GameController gameController;
+
   Rigidbody2D rb;
 
   public System.Action<GameObject> onDestroy;
 
   void Start()
   {
+    gameController = GameObject.Find("GameController").GetComponent<GameController>();
     rb = GetComponent<Rigidbody2D>();
   }
 
   void Update()
   {
     if (direction == null) return;
-    rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
+    rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime * gameController.timeDilationFactor);
     rb.rotation = _rotation;
   }
 

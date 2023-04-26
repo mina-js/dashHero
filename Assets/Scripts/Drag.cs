@@ -15,7 +15,7 @@ public enum SwipeState
 
 public class Drag : MonoBehaviour
 {
-
+  GameController gameController;
   PlayerController playerController;
   int numRedirects = 0;
   float timeGrabbed = 0f;
@@ -53,6 +53,7 @@ public class Drag : MonoBehaviour
 
   void Awake()
   {
+    gameController = GameObject.Find("GameController").GetComponent<GameController>();
     playerController = transform.parent.GetComponent<PlayerController>();
 
     swipeState = SwipeState.None;
@@ -107,6 +108,8 @@ public class Drag : MonoBehaviour
 
     timeGrabbed = 0f;
     UpdateUIGrabTimer();
+
+    gameController.slowTime();
 
     isDragging = true;
 
@@ -202,6 +205,7 @@ public class Drag : MonoBehaviour
 
   void Launch()
   {
+    gameController.resetTimeDilation();
 
     swipeState = SwipeState.Launched;
 

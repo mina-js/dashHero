@@ -11,9 +11,13 @@ public class EnemyController : MonoBehaviour
   private Vector2 direction;
   public float frequencyOfFire = 1f;
 
+  GameController gameController;
+
   // Start is called before the first frame update
   void Start()
   {
+    gameController = GameObject.Find("GameController").GetComponent<GameController>();
+
     //find tagged enemyTarget, could be better but theres only one player at the moment
     target = GameObject.FindGameObjectWithTag("bodyPart")?.transform;
     rb = GetComponent<Rigidbody2D>();
@@ -27,7 +31,7 @@ public class EnemyController : MonoBehaviour
   void Update()
   {
     //move forward by speed amount
-    rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
+    rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime * gameController.timeDilationFactor);
   }
 
   void launchBullet()
