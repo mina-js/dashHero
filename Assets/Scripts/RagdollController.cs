@@ -50,7 +50,7 @@ public class RagdollController : MonoBehaviour
     GameObject launchedArm = transform.Find("launchedArm")?.gameObject;
     TrailRenderer trailRenderer = launchedArm?.GetComponent<TrailRenderer>();
     isSlashing = true;
-    //make the trail renderer visible for 1 seconds
+
     trailRenderer.enabled = true;
     trailRenderer.emitting = true;
 
@@ -61,7 +61,7 @@ public class RagdollController : MonoBehaviour
   {
     yield return new WaitForSeconds(0.25f); //give it 0.25s of tracking for slash
     trailRenderer.emitting = false; //stop emitting, but keep visible for 1s
-    yield return new WaitForSeconds(1f);
+    yield return new WaitForSeconds(0.5f);
     trailRenderer.Clear();//reset it all
     trailRenderer.enabled = false;
     isSlashing = false;

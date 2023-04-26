@@ -15,9 +15,12 @@ public enum SwipeState
 
 public class Drag : MonoBehaviour
 {
+
+  PlayerController playerController;
+  int numRedirects = 0;
+  float timeGrabbed = 0f;
   [SerializeField] Camera mainCamera;
   Rigidbody2D rb;
-  [SerializeField] float speed; //TODO: use this for the speed when its been launched
   SwipeState swipeState;
   public float effectsCutoff = 0.1f; //how fast you have to be moving to run effects
   [SerializeField] private InputAction press, screenPos;
@@ -25,7 +28,6 @@ public class Drag : MonoBehaviour
   Vector3 startScreenPos;
   Vector2 launchVector;
   [SerializeField] GameObject movementArrow;
-  [SerializeField] bool inverseControls = true;
   bool isDragging;
   bool isPressedOn
   {
@@ -51,6 +53,8 @@ public class Drag : MonoBehaviour
 
   void Awake()
   {
+    playerController = transform.parent.GetComponent<PlayerController>();
+
     swipeState = SwipeState.None;
 
     // swipeTimer = 0f;
@@ -66,6 +70,10 @@ public class Drag : MonoBehaviour
 
     press.performed += _ => { StartCoroutine(OnTouch()); };
     press.canceled += _ => { isDragging = false; };
+
+    timeGrabbed = 0f;
+
+    UpdateUIRedirects();
   }
 
 
@@ -81,8 +89,25 @@ public class Drag : MonoBehaviour
     OnDrop();
   }
 
+  void UpdateUIRedirects()
+  {
+    EventManager.EmitEvent("redirected", new Dictionary<string, object> { { "numRedirects", playerController.numRedirectsPerLaunch - numRedirects } });
+  }
+
+  void UpdateUIGrabTimer()
+  {
+    EventManager.EmitEvent("grabTimer", new Dictionary<string, object> { { "timeLeft", playerController.timeToLaunch - timeGrabbed } });
+  }
+
   void OnGrab()
   {
+    numRedirects++;
+
+    if (numRedirects > playerController.numRedirectsPerLaunch) return;
+
+    timeGrabbed = 0f;
+    UpdateUIGrabTimer();
+
     isDragging = true;
 
     startScreenPos = WorldPos;
@@ -98,13 +123,18 @@ public class Drag : MonoBehaviour
 
   void OnDrag()
   {
+    timeGrabbed += Time.deltaTime;
+    UpdateUIGrabTimer();
 
     //TODO: theres an issue here if you click to the left of it?
 
     //Point the arrow in direction of launchvector with scaling
-    launchVector = Mathf.Sign(inverseControls ? -1f : 1f) * (WorldPos - startScreenPos);
+    launchVector = Mathf.Sign(playerController.inverseControls ? -1f : 1f) * (WorldPos - startScreenPos);
     movementArrow.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, launchVector));
     movementArrow.transform.localScale = new Vector3(1, launchVector.magnitude * 0.1f, 1);
+
+    if (timeGrabbed > playerController.timeToLaunch) Launch();
+
     //movementArrow.transform.position = transform.position;
   }
 
@@ -132,21 +162,18 @@ public class Drag : MonoBehaviour
     OrientInDirectionOfMovement();
   }
 
-  void DetectEnemyStrike()
+  private void DetectEnemyStrike()
   {
     RaycastHit2D hit = Physics2D.Raycast(transform.position, rb.velocity, Mathf.Infinity, LayerMask.GetMask("enemyLayer"));
 
-
     if (hit.collider == null) return;
 
-    Debug.Log("hit data! " + hit.collider?.gameObject?.name + " at dist " + hit.distance);
-
     float timeToHit = hit.distance / rb.velocity.magnitude;
-    Debug.Log("time to hit " + timeToHit);
+
     if (timeToHit < 0.06)
     {
+      hit.collider?.gameObject.GetComponent<EnemyController>()?.hit(playerController.damagePerStrike);
       EventManager.EmitEvent("enemyHit", null);
-      hit.collider?.gameObject.GetComponent<EnemyController>()?.kill();
     }
   }
 
@@ -167,24 +194,22 @@ public class Drag : MonoBehaviour
 
     if (eventKey == "bodyPartCollision")
     {
-      // Debug.Log("COLLIDED RESETTING");
       if (dataDict["other"].ToString().ToLower().Contains("bullet")) return;
+
       resetLaunch();
-      //TODO: have some types of collisions that dont stop launch process
     }
   }
 
   void Launch()
   {
-    // Debug.Log("LAUNCH");
-    //TODO play launch animation
 
     swipeState = SwipeState.Launched;
 
     EventManager.EmitEvent("launched", null);
+    UpdateUIRedirects();
 
     //add the launch vector to the rigidbody
-    rb.AddForce(launchVector * speed, ForceMode2D.Impulse);
+    rb.AddForce(launchVector * playerController.speed, ForceMode2D.Impulse);
 
     //remove constraints on movement
     rb.constraints = RigidbodyConstraints2D.None;
@@ -192,11 +217,18 @@ public class Drag : MonoBehaviour
     //reset arrow trnsform
     movementArrow.transform.localScale = Vector3.zero;
     movementArrow.transform.position = transform.position;
+
+    timeGrabbed = 0f;
+    isDragging = false;
+
+    UpdateUIGrabTimer();
   }
 
   void resetLaunch()
   {
     swipeState = SwipeState.None;
+    numRedirects = 0;
+    UpdateUIRedirects();
   }
 
 }

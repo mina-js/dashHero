@@ -76,9 +76,9 @@ public class EnemyController : MonoBehaviour
   }
 
   //called from any other object that wants to kill this enemy
-  public void kill()
+  public void hit(int amountDamage)
   {
-    Debug.Log("DEADDDDDDd");
+    Debug.Log("DEADDDDDDd to " + amountDamage);
     //freeze rb
     rb.constraints = RigidbodyConstraints2D.FreezeAll;
     frequencyOfFire = 0f;
