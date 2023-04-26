@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
   public int defenseScore = 1;
   public float bounciness = 0.5f;
   public float timeDilationFactor = 1f;
+  [Range(0f, 1f)]
+  public float dodgeChance = 0.5f;
 
   private GameObject canvas;
 
@@ -33,6 +35,15 @@ public class PlayerController : MonoBehaviour
 
     if (eventKey == "playerHit")
     {
+      bool isDodge = Random.Range(0f, 1f) < dodgeChance;
+
+      if (isDodge)
+      {
+        Debug.Log("Player dodged!");
+        //TODO: dodge animation
+        return;
+      }
+
       //TODO: account for defense score maybe take 1/defenseScore damage
       currentHealth -= (1f / defenseScore);
       //Debug.Log("Player health: " + currentHealth);
