@@ -29,12 +29,22 @@ public class PlayerController : MonoBehaviour
     canvas = GameObject.Find("Canvas");
   }
 
+  public void TakeDamage(int damageAmount)
+  {
+    currentHealth -= (float)(damageAmount / defenseScore);
+
+    TMPro.TextMeshProUGUI textMesh = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+    textMesh.text = "HP: " + currentHealth;
+  }
+
   void HandleEvent(string eventKey, object data)
   {
     Dictionary<string, object> dataDict = data as Dictionary<string, object>;
 
     if (eventKey == "playerHit")
     {
+      int damageAmount = (int)(dataDict["damageAmount"] ?? 1);
+
       bool isDodge = Random.Range(0f, 1f) < dodgeChance;
 
       if (isDodge)
@@ -45,12 +55,10 @@ public class PlayerController : MonoBehaviour
       }
 
       //TODO: account for defense score maybe take 1/defenseScore damage
-      currentHealth -= (1f / defenseScore);
       //Debug.Log("Player health: " + currentHealth);
-
+      TakeDamage(damageAmount);
       //update the HP textmeshpro child of canvas
-      TMPro.TextMeshProUGUI textMesh = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-      textMesh.text = "HP: " + currentHealth;
+
     }
     else if (eventKey == "redirected")
     {
