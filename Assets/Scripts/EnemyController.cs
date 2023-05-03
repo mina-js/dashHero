@@ -41,6 +41,8 @@ public class EnemyController : MonoBehaviour
 
   public void resetPosition()
   {
+    hp = maxHP;
+
     transform.position = startPosition;
 
     GetComponent<SpriteRenderer>().enabled = true;
@@ -97,24 +99,28 @@ public class EnemyController : MonoBehaviour
   //called from any other object that wants to kill this enemy
   public void hit(int amountDamage)
   {
+    Debug.Log("HIT " + maxHP + " " + hp + " " + amountDamage);
     hp -= amountDamage;
 
-    if (hp <= 0)
-    {
-      //freeze rb
-      rb.constraints = RigidbodyConstraints2D.FreezeAll;
-      frequencyOfFire = 0f;
-      //wait 0.5 seconds then destroy
-      Invoke("destroySelf", 0.5f);
-    }
+    GetComponent<SpriteRenderer>().color = Color.red;
+    rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
+    Invoke("handleHitEffects", 0.5f);
   }
 
-  void destroySelf()
+  void handleHitEffects()
   {
-    //make spriterenderer invisible and remove from physics
-    GetComponent<SpriteRenderer>().enabled = false;
-    GetComponent<Collider2D>().enabled = false;
-
+    if (hp <= 0)
+    {
+      //make spriterenderer invisible and remove from physics
+      GetComponent<SpriteRenderer>().enabled = false;
+      GetComponent<Collider2D>().enabled = false;
+      frequencyOfFire = 0f;
+    }
+    else
+    {
+      GetComponent<SpriteRenderer>().color = Color.white;
+      rb.constraints = RigidbodyConstraints2D.None;
+    }
   }
 }

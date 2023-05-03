@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="screen" class="screen" style="width: 100%; height: 100%; justify-content: center;">
+    <ui:VisualElement name="screen" class="screen" style="width: auto; height: 100%; justify-content: center; margin-left: 0; margin-right: 0; background-color: rgba(0, 0, 0, 0.25); padding-left: 10%; padding-right: 10%;">
         <ui:Slider picking-mode="Ignore" label="Speed" value="10" high-value="100" name="speed" />
         <ui:Toggle label="Inverse Controls" name="inverseControls" value="true" />
         <ui:Button text="Close" display-tooltip-when-elided="true" name="close" />

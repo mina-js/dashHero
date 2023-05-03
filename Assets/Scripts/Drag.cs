@@ -28,6 +28,7 @@ public class Drag : MonoBehaviour
   Vector3 startScreenPos;
   Vector2 launchVector;
   [SerializeField] GameObject movementArrow;
+  bool isSlashing;
   bool isDragging;
   bool isPressedOn
   {
@@ -53,6 +54,8 @@ public class Drag : MonoBehaviour
 
   void Awake()
   {
+    isSlashing = false;
+
     gameController = GameObject.Find("GameController").GetComponent<GameController>();
     playerController = transform.parent.GetComponent<PlayerController>();
 
@@ -172,13 +175,18 @@ public class Drag : MonoBehaviour
   {
     RaycastHit2D hit = Physics2D.Raycast(transform.position, rb.velocity, Mathf.Infinity, LayerMask.GetMask("enemyLayer"));
 
-    if (hit.collider == null) return;
+    if (hit.collider == null)
+    {
+      isSlashing = false;
+      return;
+    };
 
     float timeToHit = hit.distance / rb.velocity.magnitude;
 
-    if (timeToHit < 0.06)
+    if (timeToHit < 0.06 && !isSlashing)
     {
       hit.collider?.gameObject.GetComponent<EnemyController>()?.hit(playerController.damagePerStrike);
+      isSlashing = true;
       EventManager.EmitEvent("enemyHit", null);
     }
   }

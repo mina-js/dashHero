@@ -21,7 +21,7 @@ public class CameraPacer : MonoBehaviour
 
   void PaceCamera()
   {
-    transform.position += Vector3.right * speed * 10f * Time.deltaTime;
+    transform.position += Vector3.right * speed * 10f * Time.deltaTime * gameController.timeDilationFactor;
 
     //find Edge R
     GameObject edgeR = GameObject.Find("Edge R");
