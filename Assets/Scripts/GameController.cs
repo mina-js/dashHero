@@ -31,6 +31,10 @@ public class GameController : MonoBehaviour
     {
       endGame();
     }
+    else if (eventKey == "gameResumed")
+    {
+      gameState = GameState.Playing;
+    }
   }
 
   // Update is called once per frame

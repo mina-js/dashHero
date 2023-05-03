@@ -11,6 +11,8 @@ public class Menu : VisualElement
 
   GameState menuState = GameState.MainMenu;
 
+  GameState screenBeforeSettings;
+
   bool hasInitialized = false;
 
   public new class UxmlFactory : UxmlFactory<Menu, UxmlTraits> { }
@@ -72,16 +74,48 @@ public class Menu : VisualElement
       hideMenu();
     });
 
+    mainMenu?.Q("settingsButton").RegisterCallback<ClickEvent>(evt =>
+    {
+      screenBeforeSettings = GameState.MainMenu;
+      goToSettingsMenu();
+    });
+
     pauseMenu?.Q("restartButton").RegisterCallback<ClickEvent>(evt =>
     {
       EventManager.EmitEvent("startGame", null);
       hideMenu();
     });
 
+    pauseMenu?.Q("resumeButton").RegisterCallback<ClickEvent>(evt =>
+    {
+      EventManager.EmitEvent("gameResumed", null);
+      hideMenu();
+    });
+
+    pauseMenu?.Q("settingsButton").RegisterCallback<ClickEvent>(evt =>
+    {
+      screenBeforeSettings = GameState.Paused;
+      goToSettingsMenu();
+    });
+
     endMenu?.Q("restartButton").RegisterCallback<ClickEvent>(evt =>
     {
       EventManager.EmitEvent("startGame", null);
       hideMenu();
+    });
+
+    settingsMenu?.Q("speed").RegisterCallback<ChangeEvent<float>>(evt =>
+    {
+      Dictionary<string, object> data = new Dictionary<string, object>();
+      data.Add("speed", evt.newValue);
+      EventManager.EmitEvent("speedChanged", data);
+    });
+
+    settingsMenu?.Q("close").RegisterCallback<ClickEvent>(evt =>
+    {
+      if (screenBeforeSettings == GameState.MainMenu) goToMainMenu();
+      else if (screenBeforeSettings == GameState.Paused) goToPauseMenu();
+      screenBeforeSettings = GameState.MainMenu;
     });
   }
 

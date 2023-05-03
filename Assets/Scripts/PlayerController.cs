@@ -68,6 +68,11 @@ public class PlayerController : MonoBehaviour
       float timeLeft = (float)dataDict["timeLeft"];
       setGrabTimerHUD(timeLeft);
     }
+    else if (eventKey == "speedChanged")
+    {
+      float newSpeed = (float)dataDict["speed"];
+      speed = newSpeed;
+    }
   }
 
   public void ResetPlayer()
