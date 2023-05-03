@@ -73,6 +73,10 @@ public class PlayerController : MonoBehaviour
       float newSpeed = (float)dataDict["speed"];
       speed = newSpeed;
     }
+    else if (eventKey == "inverseControlsChanged")
+    {
+      inverseControls = (bool)dataDict["inverseControls"];
+    }
   }
 
   public void ResetPlayer()

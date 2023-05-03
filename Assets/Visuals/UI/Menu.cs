@@ -111,6 +111,13 @@ public class Menu : VisualElement
       EventManager.EmitEvent("speedChanged", data);
     });
 
+    settingsMenu?.Q("inverseControls").RegisterCallback<ChangeEvent<bool>>(evt =>
+    {
+      Dictionary<string, object> data = new Dictionary<string, object>();
+      data.Add("inverseControls", evt.newValue);
+      EventManager.EmitEvent("inverseControlsChanged", data);
+    });
+
     settingsMenu?.Q("close").RegisterCallback<ClickEvent>(evt =>
     {
       if (screenBeforeSettings == GameState.MainMenu) goToMainMenu();
