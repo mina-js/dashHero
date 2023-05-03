@@ -44,9 +44,11 @@ public class BulletPool : MonoBehaviour
     return null;
   }
 
-  // Update is called once per frame
-  void Update()
+  public void ResetBullets()
   {
-
+    foreach (GameObject bullet in bullets)
+    {
+      bullet.SetActive(false);
+    }
   }
 }

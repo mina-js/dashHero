@@ -1,0 +1,34 @@
+{
+    "name": "KeyboardInput",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "00bdf3bb-bfa1-4b3e-b0a0-a3ab5825d48e",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "9f37cfae-8229-463d-bfdb-254379b2a166",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1dea14ff-45b4-489f-a142-df1c8a277ab2",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

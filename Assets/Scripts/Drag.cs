@@ -80,6 +80,7 @@ public class Drag : MonoBehaviour
 
   IEnumerator OnTouch()
   {
+    if (!gameController.isGameRunning()) yield break;
 
     OnGrab();
     while (isDragging)
@@ -149,6 +150,8 @@ public class Drag : MonoBehaviour
 
   void Update()
   {
+    if (!gameController.isGameRunning()) return;
+
     if (swipeState == SwipeState.None) return;
     //TODO one day maybe launchING effects?
     if (swipeState == SwipeState.Launched) HandleLaunchEffects();

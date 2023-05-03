@@ -6,10 +6,15 @@ public class EnemyController : MonoBehaviour
 {
   [SerializeField] private GameObject bulletPrefab;
   [SerializeField] float speed = 10f;
+
+  [SerializeField] Vector3 startPosition;
   Rigidbody2D rb;
   Transform target;
   private Vector2 direction;
   public float frequencyOfFire = 1f;
+
+  public float maxHP = 1f;
+  public float hp;
 
   GameController gameController;
 
@@ -23,20 +28,30 @@ public class EnemyController : MonoBehaviour
     rb = GetComponent<Rigidbody2D>();
     direction = Random.insideUnitCircle.normalized;
 
-    launchBullet();
     InvokeRepeating("launchBullet", 0f, frequencyOfFire);
   }
 
   // Update is called once per frame
   void Update()
   {
+    if (!gameController.isGameRunning()) return;
     //move forward by speed amount
     rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime * gameController.timeDilationFactor);
   }
 
+  public void resetPosition()
+  {
+    transform.position = startPosition;
+
+    GetComponent<SpriteRenderer>().enabled = true;
+    GetComponent<Collider2D>().enabled = true;
+
+    rb.constraints = RigidbodyConstraints2D.None;
+  }
+
   void launchBullet()
   {
-    if (frequencyOfFire == 0) return;
+    if (frequencyOfFire == 0 || !gameController.isGameRunning()) return;
 
     Vector3 bulletDir = (target.transform.position - transform.position).normalized;
     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -82,16 +97,24 @@ public class EnemyController : MonoBehaviour
   //called from any other object that wants to kill this enemy
   public void hit(int amountDamage)
   {
-    Debug.Log("DEADDDDDDd to " + amountDamage);
-    //freeze rb
-    rb.constraints = RigidbodyConstraints2D.FreezeAll;
-    frequencyOfFire = 0f;
-    //wait 0.5 seconds then destroy
-    Invoke("destroySelf", 0.5f);
+    hp -= amountDamage;
+
+    if (hp <= 0)
+    {
+      //freeze rb
+      rb.constraints = RigidbodyConstraints2D.FreezeAll;
+      frequencyOfFire = 0f;
+      //wait 0.5 seconds then destroy
+      Invoke("destroySelf", 0.5f);
+    }
+
   }
 
   void destroySelf()
   {
-    Destroy(gameObject);
+    //make spriterenderer invisible and remove from physics
+    GetComponent<SpriteRenderer>().enabled = false;
+    GetComponent<Collider2D>().enabled = false;
+
   }
 }

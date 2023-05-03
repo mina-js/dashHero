@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="MainMenu" src="project://database/Assets/Visuals/UI/MainMenu.uxml?fileID=9197481963319205126&amp;guid=57c912e9e6edb49d8aabfd9e4ebe3fea&amp;type=3#MainMenu" />
+    <ui:Template name="SettingsMenu" src="project://database/Assets/Visuals/UI/SettingsMenu.uxml?fileID=9197481963319205126&amp;guid=2f7d8d05bb68445e8a520b6b81848a7e&amp;type=3#SettingsMenu" />
+    <ui:Template name="EndMenu" src="project://database/Assets/Visuals/UI/EndMenu.uxml?fileID=9197481963319205126&amp;guid=57b6eff675abc415e9ac0af74d4af460&amp;type=3#EndMenu" />
+    <ui:Template name="PauseMenu" src="project://database/Assets/Visuals/UI/PauseMenu.uxml?fileID=9197481963319205126&amp;guid=6f3b3f40ee0c741b2bf245f77984d302&amp;type=3#PauseMenu" />
+    <Menu style="width: 100%; height: 100%; justify-content: center; position: absolute; align-items: center; display: flex;">
+        <ui:Instance template="MainMenu" name="MainMenu" style="display: none; visibility: visible; opacity: 1; width: 100%; height: 100%;" />
+        <ui:Instance template="SettingsMenu" name="SettingsMenu" style="width: 100%; height: 100%;" />
+        <ui:Instance template="EndMenu" name="EndMenu" style="width: 100%; height: 100%;" />
+        <ui:Instance template="PauseMenu" name="PauseMenu" style="width: 100%; height: 100%;" />
+    </Menu>
+</ui:UXML>

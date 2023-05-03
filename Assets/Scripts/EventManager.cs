@@ -5,7 +5,7 @@ public static class EventManager
   public static event System.Action<string, Dictionary<string, object>> OnEventEmitted;
 
   // Method to invoke the OnButtonClicked event
-  public static void EmitEvent(string eventKey, Dictionary<string, object> data)
+  public static void EmitEvent(string eventKey, Dictionary<string, object> data = null)
   {
     OnEventEmitted?.Invoke(eventKey, data);
   }

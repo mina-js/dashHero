@@ -5,6 +5,7 @@ using UnityEngine;
 public class BodyPartCollisionBehaviorController : MonoBehaviour
 {
   PlayerController playerController;
+  GameController gameController;
   Rigidbody2D rb;
 
   void Start()
@@ -12,6 +13,20 @@ public class BodyPartCollisionBehaviorController : MonoBehaviour
     playerController = transform.parent.GetComponent<PlayerController>();
     //get rb of torso
     rb = transform.parent.Find("torso").GetComponent<Rigidbody2D>();
+
+    gameController = GameObject.Find("GameController").GetComponent<GameController>();
+  }
+
+  void Update()
+  {
+    if (!gameController.isGameRunning())
+    {
+      rb.constraints = RigidbodyConstraints2D.FreezeAll;
+    }
+    else
+    {
+      rb.constraints = RigidbodyConstraints2D.None;
+    }
   }
   //Exists to handle collision events concerning this body part object
 

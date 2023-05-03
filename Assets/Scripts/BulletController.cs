@@ -23,7 +23,7 @@ public class BulletController : MonoBehaviour
 
   void Update()
   {
-    if (direction == null) return;
+    if (direction == null || gameController.isGameRunning()) return;
     rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime * gameController.timeDilationFactor);
     rb.rotation = _rotation;
   }

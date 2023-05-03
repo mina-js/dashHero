@@ -26,15 +26,13 @@ public class PlayerController : MonoBehaviour
     currentHealth = maxHealth;
     EventManager.OnEventEmitted += HandleEvent;
 
-    canvas = GameObject.Find("Canvas");
+    canvas = GameObject.Find("HUD");
   }
 
   public void TakeDamage(int damageAmount)
   {
     currentHealth -= (float)(damageAmount / defenseScore);
-
-    TMPro.TextMeshProUGUI textMesh = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-    textMesh.text = "HP: " + currentHealth;
+    updateHealthHUD();
   }
 
   void HandleEvent(string eventKey, object data)
@@ -43,7 +41,7 @@ public class PlayerController : MonoBehaviour
 
     if (eventKey == "playerHit")
     {
-      int damageAmount = (int)(dataDict["damageAmount"] ?? 1);
+      int damageAmount = data == null ? 1 : (int)(dataDict["damageAmount"] ?? 1);
 
       bool isDodge = Random.Range(0f, 1f) < dodgeChance;
 
@@ -63,15 +61,38 @@ public class PlayerController : MonoBehaviour
     else if (eventKey == "redirected")
     {
       int numRedirects = (int)dataDict["numRedirects"];
-      //update the Jumps textmeshpro child of canvas
-      TMPro.TextMeshProUGUI textMesh = canvas.transform.Find("Jumps")?.GetComponent<TMPro.TextMeshProUGUI>();
-      textMesh.text = "Jumps: " + numRedirects;
+      setJumpsHUD(numRedirects);
     }
     else if (eventKey == "grabTimer")
     {
       float timeLeft = (float)dataDict["timeLeft"];
-      TMPro.TextMeshProUGUI textMesh = canvas.transform.Find("Timer")?.GetComponent<TMPro.TextMeshProUGUI>();
-      textMesh.text = timeLeft.ToString("F2") + "s";
+      setGrabTimerHUD(timeLeft);
     }
+  }
+
+  public void ResetPlayer()
+  {
+    currentHealth = maxHealth;
+    updateHealthHUD();
+    setJumpsHUD(numRedirectsPerLaunch);
+    setGrabTimerHUD(timeToLaunch);
+  }
+
+  void updateHealthHUD()
+  {
+    TMPro.TextMeshProUGUI textMesh = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+    textMesh.text = "HP: " + currentHealth;
+  }
+
+  void setJumpsHUD(int val)
+  {
+    TMPro.TextMeshProUGUI textMesh = canvas.transform.Find("Jumps")?.GetComponent<TMPro.TextMeshProUGUI>();
+    textMesh.text = "Jumps: " + val;
+  }
+
+  void setGrabTimerHUD(float val)
+  {
+    TMPro.TextMeshProUGUI textMesh = canvas.transform.Find("Timer")?.GetComponent<TMPro.TextMeshProUGUI>();
+    textMesh.text = val.ToString("F2") + "s";
   }
 }
