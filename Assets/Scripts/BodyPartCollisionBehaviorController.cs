@@ -7,9 +7,12 @@ public class BodyPartCollisionBehaviorController : MonoBehaviour
   PlayerController playerController;
   GameController gameController;
   Rigidbody2D rb;
+  Drag drag;
 
   void Start()
   {
+    drag = GetComponent<Drag>();
+
     playerController = transform.parent.GetComponent<PlayerController>();
     //get rb of torso
     rb = transform.parent.Find("torso").GetComponent<Rigidbody2D>();

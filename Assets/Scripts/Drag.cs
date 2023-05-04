@@ -21,7 +21,7 @@ public class Drag : MonoBehaviour
   float timeGrabbed = 0f;
   [SerializeField] Camera mainCamera;
   Rigidbody2D rb;
-  SwipeState swipeState;
+  public SwipeState swipeState;
   public float effectsCutoff = 0.1f; //how fast you have to be moving to run effects
   [SerializeField] private InputAction press, screenPos;
   Vector3 currentScreenPos;
@@ -108,6 +108,7 @@ public class Drag : MonoBehaviour
   {
     numRedirects++;
 
+    Debug.Log("GRABBED");
     if (numRedirects > playerController.numRedirectsPerLaunch) return;
 
     timeGrabbed = 0f;
@@ -119,9 +120,12 @@ public class Drag : MonoBehaviour
 
     startScreenPos = WorldPos;
 
+    Debug.Log("FREEZING! " + rb.constraints.ToString());
     //freeze the rigidbody
-    rb.constraints = RigidbodyConstraints2D.FreezeAll;
     rb.velocity = Vector2.zero;
+    rb.bodyType = RigidbodyType2D.Static;
+    // rb.constraints = RigidbodyConstraints2D.FreezeAll;
+    Debug.Log("frozen???? " + rb.constraints.ToString());
 
     swipeState = SwipeState.Launching;
 
@@ -139,10 +143,10 @@ public class Drag : MonoBehaviour
     launchVector = Mathf.Sign(playerController.inverseControls ? -1f : 1f) * (WorldPos - startScreenPos);
     movementArrow.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, launchVector));
     movementArrow.transform.localScale = new Vector3(1, launchVector.magnitude * 0.01f, 1);
+    movementArrow.transform.position = transform.position;
 
     if (timeGrabbed > playerController.timeToLaunch) Launch();
 
-    //movementArrow.transform.position = transform.position;
   }
 
   void OnDrop()
@@ -216,6 +220,7 @@ public class Drag : MonoBehaviour
 
   void Launch()
   {
+    Debug.Log("LAUNCH");
     gameController.resetTimeDilation();
 
     swipeState = SwipeState.Launched;
@@ -224,10 +229,10 @@ public class Drag : MonoBehaviour
     UpdateUIRedirects();
 
     //add the launch vector to the rigidbody
-    rb.AddForce(launchVector * playerController.speed, ForceMode2D.Impulse);
 
     //remove constraints on movement
-    rb.constraints = RigidbodyConstraints2D.None;
+    rb.bodyType = RigidbodyType2D.Dynamic;
+    rb.AddForce(launchVector * playerController.speed, ForceMode2D.Impulse);
 
     //reset arrow trnsform
     movementArrow.transform.localScale = Vector3.zero;

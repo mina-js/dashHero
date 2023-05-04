@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="screen" focusable="false" style="width: 100%; height: 100%; justify-content: space-between;">
+        <ui:Button text="| |" display-tooltip-when-elided="true" name="pauseButton" style="margin-left: auto; margin-right: auto; padding-left: 6px; padding-top: 6px; padding-bottom: 6px; margin-top: 5px; -unity-font-style: bold; font-size: 24px; letter-spacing: 6px; -unity-font: initial;" />
+    </ui:VisualElement>
+</ui:UXML>

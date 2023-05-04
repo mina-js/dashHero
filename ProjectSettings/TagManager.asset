@@ -18,7 +18,7 @@ TagManager:
   - UI
   - playerLayer
   - cameraWall
-  - 
+  - background
   - 
   - 
   - 
@@ -42,6 +42,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 67217587
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

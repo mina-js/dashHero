@@ -8,6 +8,7 @@ public class Menu : VisualElement
   VisualElement pauseMenu;
   VisualElement settingsMenu;
   VisualElement endMenu;
+  VisualElement playScreen;
 
   GameState menuState = GameState.MainMenu;
 
@@ -51,6 +52,7 @@ public class Menu : VisualElement
     pauseMenu = this.Q("PauseMenu");
     settingsMenu = this.Q("SettingsMenu");
     endMenu = this.Q("EndMenu");
+    playScreen = this.Q("PlayScreen");
 
     registerCommands();
 
@@ -124,6 +126,12 @@ public class Menu : VisualElement
       else if (screenBeforeSettings == GameState.Paused) goToPauseMenu();
       screenBeforeSettings = GameState.MainMenu;
     });
+
+    playScreen?.Q("pauseButton").RegisterCallback<ClickEvent>(evt =>
+    {
+      EventManager.EmitEvent("pauseGame", null);
+      goToPauseMenu();
+    });
   }
 
   public void hideMenu()
@@ -132,6 +140,8 @@ public class Menu : VisualElement
     settingsMenu.style.display = DisplayStyle.None;
     pauseMenu.style.display = DisplayStyle.None;
     endMenu.style.display = DisplayStyle.None;
+
+    playScreen.style.display = DisplayStyle.Flex;
 
     menuState = GameState.Playing;
   }
@@ -142,6 +152,7 @@ public class Menu : VisualElement
     settingsMenu.style.display = DisplayStyle.None;
     pauseMenu.style.display = DisplayStyle.None;
     endMenu.style.display = DisplayStyle.None;
+    playScreen.style.display = DisplayStyle.None;
 
     menuState = GameState.MainMenu;
   }
@@ -152,6 +163,8 @@ public class Menu : VisualElement
     settingsMenu.style.display = DisplayStyle.Flex;
     pauseMenu.style.display = DisplayStyle.None;
     endMenu.style.display = DisplayStyle.None;
+    playScreen.style.display = DisplayStyle.None;
+
 
     menuState = GameState.Settings;
   }
@@ -162,6 +175,8 @@ public class Menu : VisualElement
     settingsMenu.style.display = DisplayStyle.None;
     pauseMenu.style.display = DisplayStyle.Flex;
     endMenu.style.display = DisplayStyle.None;
+    playScreen.style.display = DisplayStyle.None;
+
 
     menuState = GameState.Paused;
   }
@@ -172,6 +187,8 @@ public class Menu : VisualElement
     settingsMenu.style.display = DisplayStyle.None;
     pauseMenu.style.display = DisplayStyle.None;
     endMenu.style.display = DisplayStyle.Flex;
+    playScreen.style.display = DisplayStyle.None;
+
 
     menuState = GameState.End;
   }

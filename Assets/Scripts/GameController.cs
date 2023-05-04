@@ -35,6 +35,10 @@ public class GameController : MonoBehaviour
     {
       gameState = GameState.Playing;
     }
+    else if (eventKey == "pauseGame")
+    {
+      pauseGame();
+    }
   }
 
   // Update is called once per frame
@@ -94,6 +98,7 @@ public class GameController : MonoBehaviour
 
   public void pauseGame()
   {
+    Debug.Log("PAUSING IN GAME CONTROLLER");
     if (gameState == GameState.Paused)
     {
       gameState = GameState.Playing;

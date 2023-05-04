@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="screen" class="screen" style="width: auto; height: 100%; justify-content: center; margin-left: 0; margin-right: 0; background-color: rgba(0, 0, 0, 0.25); padding-left: 10%; padding-right: 10%;">
-        <ui:Slider picking-mode="Ignore" label="Speed" value="10" high-value="100" name="speed" />
-        <ui:Toggle label="Inverse Controls" name="inverseControls" value="true" />
+        <ui:Slider picking-mode="Ignore" label="Speed" value="10" high-value="100" name="speed" style="-unity-font-style: bold; font-size: 22px; color: rgb(255, 255, 255); -unity-font: url(&apos;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&apos;);" />
+        <ui:Toggle label="Inverse Controls" name="inverseControls" value="true" style="font-size: 22px; -unity-font-style: bold; color: rgba(255, 255, 255, 255);" />
         <ui:Button text="Close" display-tooltip-when-elided="true" name="close" />
     </ui:VisualElement>
 </ui:UXML>
