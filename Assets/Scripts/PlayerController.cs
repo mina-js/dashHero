@@ -42,12 +42,12 @@ public class PlayerController : MonoBehaviour
     if (eventKey == "playerHit")
     {
       int damageAmount = data == null ? 1 : (int)(dataDict["damageAmount"] ?? 1);
-
+      bool isDodgeable = data == null ? true : ((bool)(dataDict["isDodgeable"]) && true);
       bool isDodge = Random.Range(0f, 1f) < dodgeChance;
 
-      if (isDodge)
+      if (isDodgeable && isDodge)
       {
-        Debug.Log("Player dodged!");
+        // Debug.Log("Player dodged!");
         //TODO: dodge animation
         return;
       }

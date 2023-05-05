@@ -8,6 +8,7 @@ TagManager:
   - bodyPart
   - wall
   - enemy
+  - deadPool
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - playerLayer
   - cameraWall
   - background
-  - 
+  - bulletLayer
   - 
   - 
   - 

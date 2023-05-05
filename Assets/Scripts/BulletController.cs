@@ -14,18 +14,44 @@ public class BulletController : MonoBehaviour
   Rigidbody2D rb;
 
   public System.Action<GameObject> onDestroy;
+  GameObject deadPool;
+
+  [SerializeField] int damageAmount = 1;
+  [SerializeField] bool isDodgeable = false;
 
   void Start()
   {
     gameController = GameObject.Find("GameController").GetComponent<GameController>();
     rb = GetComponent<Rigidbody2D>();
+
+    //find gameobject tagged deadpool
+    deadPool = GameObject.FindWithTag("deadPool");
   }
 
   void Update()
   {
-    if (direction == null || gameController.isGameRunning()) return;
+    if (inDeadpool())
+    {
+      HandleContactWithWall();
+      return;
+    }
+
+    if (direction == null || !gameController.isGameRunning())
+    {
+      rb.bodyType = RigidbodyType2D.Static;
+      return;
+    }
+    else
+    {
+      rb.bodyType = RigidbodyType2D.Dynamic;
+    }
     rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime * gameController.timeDilationFactor);
     rb.rotation = _rotation;
+  }
+
+  bool inDeadpool()
+  {
+    return transform.position.x <= deadPool.transform.position.x;
   }
 
   void OnCollisionEnter2D(Collision2D collision)
@@ -49,6 +75,9 @@ public class BulletController : MonoBehaviour
   {
     Debug.Log("HIT BY BULLET!!!!");
     onDestroy?.Invoke(gameObject);
+
+    Dictionary<string, object> data = new Dictionary<string, object>() { { "damageAmount", damageAmount }, { "isDodgeable", isDodgeable } };
+
     EventManager.EmitEvent("playerHit", null);
     //TODO: create a particle effect
   }

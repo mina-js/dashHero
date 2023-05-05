@@ -106,6 +106,12 @@ public class Menu : VisualElement
       hideMenu();
     });
 
+    endMenu?.Q("fuckAround").RegisterCallback<ClickEvent>(evt =>
+    {
+      //TODO: maybe fuck around playground state
+      hideMenu();
+    });
+
     settingsMenu?.Q("speed").RegisterCallback<ChangeEvent<float>>(evt =>
     {
       Dictionary<string, object> data = new Dictionary<string, object>();
