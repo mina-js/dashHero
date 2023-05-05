@@ -9883,7 +9883,7 @@ GameObject:
   - component: {fileID: 4763627915082412412}
   m_Layer: 8
   m_Name: Camera Wall 4
-  m_TagString: Untagged
+  m_TagString: cameraWall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10413,7 +10413,7 @@ GameObject:
   - component: {fileID: 9020019758319284343}
   m_Layer: 8
   m_Name: Camera Wall 1
-  m_TagString: Untagged
+  m_TagString: cameraWall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10534,7 +10534,7 @@ GameObject:
   - component: {fileID: 8219524243778035494}
   m_Layer: 8
   m_Name: Camera Wall 3
-  m_TagString: Untagged
+  m_TagString: cameraWall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

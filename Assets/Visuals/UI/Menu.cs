@@ -73,6 +73,9 @@ public class Menu : VisualElement
     mainMenu?.Q("startButton").RegisterCallback<ClickEvent>(evt =>
     {
       EventManager.EmitEvent("startGame", null);
+      //sleep for 2 seconds
+      System.Threading.Thread.Sleep(2000);
+
       hideMenu();
     });
 
@@ -85,6 +88,9 @@ public class Menu : VisualElement
     pauseMenu?.Q("restartButton").RegisterCallback<ClickEvent>(evt =>
     {
       EventManager.EmitEvent("startGame", null);
+      //sleep for 2 seconds
+      System.Threading.Thread.Sleep(2000);
+
       hideMenu();
     });
 
@@ -103,6 +109,10 @@ public class Menu : VisualElement
     endMenu?.Q("restartButton").RegisterCallback<ClickEvent>(evt =>
     {
       EventManager.EmitEvent("startGame", null);
+
+      //sleep for 2 seconds
+      System.Threading.Thread.Sleep(2000);
+
       hideMenu();
     });
 

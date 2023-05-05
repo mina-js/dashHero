@@ -49,6 +49,10 @@ public class GameController : MonoBehaviour
 
   public void resetGame()
   {
+
+    Transform cameraPacer = GameObject.Find("CameraPacer").transform;
+    cameraPacer.position = new Vector3(0, 0, 0);
+
     GameObject player = GameObject.Find("Roleplayer");
 
     Rigidbody2D[] rigidBodies = player.GetComponentsInChildren<Rigidbody2D>();
@@ -63,9 +67,6 @@ public class GameController : MonoBehaviour
 
     rigidBodies.ToList().ForEach(rb => rb.isKinematic = false);
 
-    Transform cameraPacer = GameObject.Find("CameraPacer").transform;
-    cameraPacer.position = new Vector3(0, 0, 0);
-
     List<EnemyController> enemies = new List<EnemyController>();
     enemies.AddRange(GameObject.FindGameObjectsWithTag("enemy").Select(enemy => enemy.GetComponent<EnemyController>()));
     enemies.ForEach(enemy => enemy.resetPosition());
@@ -75,6 +76,10 @@ public class GameController : MonoBehaviour
 
     PlayerController playerController = GameObject.Find("Roleplayer").GetComponent<PlayerController>();
     playerController.ResetPlayer();
+
+
+    gameState = GameState.Playing;
+    EventManager.EmitEvent("gameStarted");
   }
 
   public bool isGameRunning()
@@ -85,7 +90,21 @@ public class GameController : MonoBehaviour
   public void startGame()
   {
     Debug.Log("STARTING");
+
+    StartCoroutine(runGameReset());
+  }
+
+  IEnumerator runGameReset()
+  {
+    GameObject.FindGameObjectsWithTag("deadPool").Concat(GameObject.FindGameObjectsWithTag("cameraWall"))
+    .ToList().ForEach(cameraWall => cameraWall.GetComponent<Collider2D>().enabled = false);
+
     resetGame();
+
+    yield return new WaitForSeconds(2f);
+
+    GameObject.FindGameObjectsWithTag("deadPool").Concat(GameObject.FindGameObjectsWithTag("cameraWall"))
+    .ToList().ForEach(cameraWall => cameraWall.GetComponent<Collider2D>().enabled = true);
 
     gameState = GameState.Playing;
     EventManager.EmitEvent("gameStarted");
